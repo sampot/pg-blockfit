@@ -1,0 +1,6 @@
+import{emptyGrid,deal,canPlace,place}from"./game.js";
+let grid=emptyGrid(8);let tray=deal();let score=0;let sel=0;
+const board=document.getElementById("board");const trayEl=document.getElementById("tray");const status=document.getElementById("status");
+function render(){board.innerHTML="";board.style.gridTemplateColumns="repeat(8,1fr)";grid.forEach((row,r)=>row.forEach((v,c)=>{const b=document.createElement("button");b.type="button";b.className="cell";b.style.aspectRatio="1";b.style.background=v?"var(--accent)":"color-mix(in oklab,var(--fg) 10%,transparent)";b.onclick=()=>tryPlace(r,c);board.appendChild(b);}));trayEl.textContent="托盤 "+tray.map((s,i)=>(i===sel?"[" :"")+s.flat().filter(Boolean).length+(i===sel?"]":"")).join(" · ");status.textContent="分數 "+score;}
+function tryPlace(r,c){const shape=tray[sel];if(!shape||!canPlace(grid,shape,r,c))return;const res=place(grid,shape,r,c);grid=res.grid;score+=10+res.cleared*50;tray[sel]=null;if(tray.every(x=>!x))tray=deal();render();fetch("/api/kv/highscore",{method:"PUT",body:String(score)}).catch(()=>{});}
+document.getElementById("btn-next").onclick=()=>{sel=(sel+1)%3;render();};document.getElementById("btn-new").onclick=()=>{grid=emptyGrid(8);tray=deal();score=0;render();};render();

@@ -1,0 +1,2 @@
+import{describe,expect,it}from"vitest";import{canPlace,place,emptyGrid,clearLines}from"./game.js";
+describe("blockfit",()=>{it("places and clears",()=>{let g=emptyGrid(2);({grid:g}=place(g,[[1,1],[1,1]],0,0));expect(g[0][0]).toBe(0);});it("rejects OOB",()=>{expect(canPlace(emptyGrid(2),[[1,1,1]],0,0)).toBe(false);});});
